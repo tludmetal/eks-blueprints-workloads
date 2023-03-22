@@ -10,7 +10,7 @@ metadata:
 spec:
   ingressClassName: {{ .Values.spec.ingress.type }}
   rules:
-    - host: game-2048-{{ .Values.spec.clusterName }}.{{ .Values.spec.ingress.host }}
+    - host: team-2048-{{ .Values.spec.clusterName }}.{{ .Values.spec.ingress.host }}
       http:
         paths:
         - path: /
