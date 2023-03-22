@@ -3,14 +3,9 @@ kind: Service
 metadata:
   namespace: team-2048
   name: service-2048
-  labels:
-    app: 2048
-    {{- toYaml .Values.labels | nindent 4 }}
 spec:
   ports:
     - port: 80
       targetPort: 80
-      protocol: TCP
-  type: NodePort
   selector:
     app.kubernetes.io/name: app-2048
