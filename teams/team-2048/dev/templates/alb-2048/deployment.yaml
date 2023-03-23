@@ -22,7 +22,7 @@ spec:
     spec:
       automountServiceAccountToken: false
       containers:
-        - image: public.ecr.aws/l6m2t8p7/docker-2048:latest
+        - image: 971863113778.dkr.ecr.us-east-1.amazonaws.com/ninjaapp:v1.0.0
           imagePullPolicy: Always
           name: app-2048
           ports:
