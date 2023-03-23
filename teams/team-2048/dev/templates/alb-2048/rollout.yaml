@@ -1,0 +1,97 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: rollout-2048
+  namespace: team-2048
+  labels:
+    app: ninja
+spec:
+  replicas: 3
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app: ninja
+  template:
+    metadata:
+      labels:
+        app: ninja
+    spec:
+      containers:
+      - name: ninja
+        image: 971863113778.dkr.ecr.us-east-1.amazonaws.com/ninjaapp:v1.1.0
+        imagePullPolicy: Always
+        ports:
+        - name: http
+          containerPort: 80
+          protocol: TCP
+        resources:
+            requests:
+                memory: "64Mi"
+                cpu: "250m"
+            limits:
+                memory: "128Mi"
+                cpu: "500m"
+      {{ if .Values.spec.karpenterInstanceProfile }}
+      nodeSelector: # <- add nodeselector, toleration and spread constraitns
+        team: default
+        type: karpenter
+      tolerations:
+        - key: 'karpenter'
+          operator: 'Exists'
+          effect: 'NoSchedule'
+      {{ end }}
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels:
+              app: ninja
+      tolerations:
+        - key: 'karpenter'
+          operator: 'Exists'
+          effect: 'NoSchedule'                
+  strategy:
+    blueGreen:
+      autoPromotionEnabled: false
+      activeService: service-2048
+      previewService: service-2048-preview
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-2048-preview
+  namespace: team-2048
+spec:
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+  type: NodePort
+  selector:
+    app.kubernetes.io/name: app-2048
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-2048-preview
+  namespace: team-2048
+  annotations:
+    alb.ingress.kubernetes.io/group.name: 2048-preview
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
+    alb.ingress.kubernetes.io/tags: 'Environment=dev,Team=2048'
+spec:
+  ingressClassName: alb
+  rules:
+  - host: 
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: service-2048-preview
+            port:
+              number: 80
