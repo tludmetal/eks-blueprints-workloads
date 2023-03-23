@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: nginx
-          image: public.ecr.aws/nginx/nginx:1.21
+          image: 971863113778.dkr.ecr.us-east-1.amazonaws.com/ninjaapp:v1.0.0
           ports:
             - name: tcp
               containerPort: 80
