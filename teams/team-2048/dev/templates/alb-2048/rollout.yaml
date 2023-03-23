@@ -12,10 +12,12 @@ spec:
   selector:
     matchLabels:
       app: 2048
+      {{- toYaml .Values.labels | nindent 4 }}
   template:
     metadata:
       labels:
         app: 2048
+        {{- toYaml .Values.labels | nindent 4 }}
     spec:
       containers:
       - name: 2048
