@@ -72,8 +72,7 @@ spec:
       protocol: TCP
   type: NodePort
   selector:
-    app: 2048
-    {{- toYaml .Values.labels | nindent 4 }}
+    app.kubernetes.io/name: app-2048
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
