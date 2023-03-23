@@ -5,6 +5,7 @@ metadata:
   namespace: team-2048
   labels:
     app: 2048
+    {{- toYaml .Values.labels | nindent 4 }}
 spec:
   replicas: 3
   revisionHistoryLimit: 1
