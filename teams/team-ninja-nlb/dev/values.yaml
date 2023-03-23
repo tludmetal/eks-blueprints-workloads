@@ -1,0 +1,8 @@
+labels:
+  env: dev
+  team: team-ninja-nlb
+spec:
+  env:
+  ingress:
+    host:
+    type: nlb
