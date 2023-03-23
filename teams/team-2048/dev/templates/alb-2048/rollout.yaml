@@ -49,7 +49,8 @@ spec:
           whenUnsatisfiable: DoNotSchedule
           labelSelector:
             matchLabels:
-              app: 2048          
+              app: 2048
+              {{- toYaml .Values.labels | nindent 4 }}         
       tolerations:
         - key: 'karpenter'
           operator: 'Exists'
@@ -73,6 +74,7 @@ spec:
   type: NodePort
   selector:
     app: 2048
+    {{- toYaml .Values.labels | nindent 4 }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
