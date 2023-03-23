@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Rollout
 metadata:
-  name: deployment-2048
+  name: rollout-2048
   namespace: team-2048
   labels:
     app: 2048
