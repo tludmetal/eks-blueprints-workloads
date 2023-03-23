@@ -1,6 +1,6 @@
 labels:
   env: prod
-  team: riker
+  team: app-team
 spec:
   env:
   ingress:
