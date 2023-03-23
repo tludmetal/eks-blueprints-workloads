@@ -55,12 +55,12 @@ spec:
     blueGreen:
       autoPromotionEnabled: false
       activeService: service-2048
-      previewService: 2048-service-preview
+      previewService: service-2048-preview
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: 2048-service-preview
+  name: service-2048-preview
   namespace: team-2048
 spec:
   ports:
@@ -74,7 +74,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: 2048-ingress-preview
+  name: ingress-2048-preview
   namespace: team-2048
   annotations:
     alb.ingress.kubernetes.io/group.name: 2048-preview
@@ -92,6 +92,6 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: 2048-service-preview
+            name: service-2048-preview
             port:
               number: 80
