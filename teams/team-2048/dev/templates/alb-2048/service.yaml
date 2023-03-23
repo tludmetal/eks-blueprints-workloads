@@ -4,8 +4,7 @@ metadata:
   namespace: team-2048
   name: service-2048
   labels:
-    app: 2048
-    {{- toYaml .Values.labels | nindent 4 }}
+    app: ninja
 spec:
   ports:
     - port: 80
