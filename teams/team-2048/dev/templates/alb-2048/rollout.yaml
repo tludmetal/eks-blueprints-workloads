@@ -4,20 +4,17 @@ metadata:
   name: rollout-2048
   namespace: team-2048
   labels:
-    app: 2048
-    {{- toYaml .Values.labels | nindent 4 }}
+    app: ninja
 spec:
   replicas: 3
   revisionHistoryLimit: 1
   selector:
     matchLabels:
-      app: 2048
-      {{- toYaml .Values.labels | nindent 4 }}
+      app: ninja
   template:
     metadata:
       labels:
-        app: 2048
-        {{- toYaml .Values.labels | nindent 4 }}
+        app: ninja
     spec:
       containers:
       - name: 2048
@@ -49,7 +46,7 @@ spec:
           whenUnsatisfiable: DoNotSchedule
           labelSelector:
             matchLabels:
-              app: 2048
+              app: ninja
       tolerations:
         - key: 'karpenter'
           operator: 'Exists'
