@@ -4,7 +4,8 @@ metadata:
   namespace: team-2048
   name: deployment-2048
   labels:
-    app: ninja
+    app: 2048
+    {{- toYaml .Values.labels | nindent 4 }}
 spec:
   selector:
     matchLabels:
@@ -22,7 +23,7 @@ spec:
     spec:
       automountServiceAccountToken: false
       containers:
-        - image: 971863113778.dkr.ecr.us-east-1.amazonaws.com/ninjaapp:v1.0.0
+        - image: 971863113778.dkr.ecr.us-east-1.amazonaws.com/ninjaapp:v1.1.0
           imagePullPolicy: Always
           name: app-2048
           ports:

@@ -15,7 +15,7 @@ spec:
         app: ninja
     spec:
       containers:
-      - name: ninja
+      - name: app-2048
         image: 971863113778.dkr.ecr.us-east-1.amazonaws.com/ninjaapp:v1.1.0
         imagePullPolicy: Always
         ports:
