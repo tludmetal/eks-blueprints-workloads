@@ -17,7 +17,7 @@ spec:
         app: ninja
     spec:
       containers:
-      - name: 2048
+      - name: ninja
         image: public.ecr.aws/l6m2t8p7/docker-2048:latest
         imagePullPolicy: Always
         ports:
