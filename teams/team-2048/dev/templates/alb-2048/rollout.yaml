@@ -10,7 +10,7 @@ spec:
   revisionHistoryLimit: 1
   selector:
     matchLabels:
-      app: ninja
+      app.kubernetes.io/name: app-2048
   template:
     metadata:
       labels:
@@ -46,7 +46,7 @@ spec:
           whenUnsatisfiable: DoNotSchedule
           labelSelector:
             matchLabels:
-              app: ninja
+              app.kubernetes.io/name: app-2048
       tolerations:
         - key: 'karpenter'
           operator: 'Exists'
