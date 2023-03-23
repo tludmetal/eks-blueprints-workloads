@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: ninja
-        image: sharepointoscar/skiapp:v2
+        image: 971863113778.dkr.ecr.us-east-1.amazonaws.com/ninjaapp:v1.1.0
         imagePullPolicy: Always
         ports:
         - name: http
