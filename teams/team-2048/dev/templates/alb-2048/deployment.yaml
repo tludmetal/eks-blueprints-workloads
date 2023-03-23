@@ -8,7 +8,7 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app.kubernetes.io/name: app-2048
+      app.kubernetes.io/name: ninja
   replicas: 3
   strategy:
     rollingUpdate:
@@ -18,13 +18,13 @@ spec:
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: app-2048
+        app.kubernetes.io/name: ninja
     spec:
       automountServiceAccountToken: false
       containers:
         - image: 971863113778.dkr.ecr.us-east-1.amazonaws.com/ninjaapp:v1.0.0
           imagePullPolicy: Always
-          name: app-2048
+          name: ninja
           ports:
             - containerPort: 80
               protocol: TCP
@@ -56,4 +56,4 @@ spec:
           whenUnsatisfiable: DoNotSchedule
           labelSelector:
             matchLabels:
-              app.kubernetes.io/name: app-2048
+              app.kubernetes.io/name: ninja
