@@ -76,24 +76,47 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ingress-2048-preview
   namespace: team-2048
+  name: ingress-2048-preview
+  labels:
+    app: ninja
   annotations:
-    alb.ingress.kubernetes.io/group.name: 2048-preview
+{{ if eq .Values.spec.ingress.type "nginx" }}
+    kubernetes.io/ingress.class: "nginx"
+{{ else }}
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
+  {{ if .Values.spec.ingress.host }}
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80,"HTTPS": 443}]'
+    alb.ingress.kubernetes.io/ssl-redirect: '443'
+  {{ else }}
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
-    alb.ingress.kubernetes.io/tags: 'Environment=dev,Team=2048'
+  {{ end }}
+    alb.ingress.kubernetes.io/tags: Environment={{ .Values.labels.env }},Team=2048
+{{ end }}
+  {{ if .Values.spec.ingress.host }}
+    external-dns.alpha.kubernetes.io/set-identifier: {{ .Values.spec.clusterName }}
+    external-dns.alpha.kubernetes.io/aws-weight: '{{ .Values.spec.ingress.route53_weight }}'
+    external-dns.alpha.kubernetes.io/ttl: "10"
+  {{ end }}     
 spec:
+{{ if eq .Values.spec.ingress.type "nginx" }}
+  kubernetes.io/ingress.class: "nginx"
+{{ else }}
   ingressClassName: alb
+{{ end }}
   rules:
-  - host: 
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: service-2048-preview
-            port:
-              number: 80
+{{ if .Values.spec.ingress.host }}
+    - host: 2048.{{ .Values.spec.ingress.host }}
+{{ else }}
+    - host: 
+{{ end }}
+      http:
+        paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: service-2048
+              port:
+                number: 80
