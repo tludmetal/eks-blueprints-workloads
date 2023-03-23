@@ -1,32 +1,28 @@
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  namespace: team-2048
-  name: apiVersion: argoproj.io/v1alpha1
+apiVersion: argoproj.io/v1alpha1
 kind: Rollout
 metadata:
-  name: skiapp-rollout
-  namespace: team-riker
+  name: deployment-2048
+  namespace: team-2048
   labels:
-    app: skiapp
+    app: 2048
 spec:
   replicas: 3
   revisionHistoryLimit: 1
   selector:
     matchLabels:
-      app: skiapp
+      app: 2048
   template:
     metadata:
       labels:
-        app: skiapp
+        app: 2048
     spec:
       containers:
-      - name: skiapp
-        image: sharepointoscar/skiapp:v1
+      - name: 2048
+        image: public.ecr.aws/l6m2t8p7/docker-2048:latest
         imagePullPolicy: Always
         ports:
         - name: http
-          containerPort: 8080
+          containerPort: 80
           protocol: TCP
         resources:
             requests:
@@ -50,7 +46,7 @@ spec:
           whenUnsatisfiable: DoNotSchedule
           labelSelector:
             matchLabels:
-              app: skiapp          
+              app: 2048          
       tolerations:
         - key: 'karpenter'
           operator: 'Exists'
@@ -58,34 +54,34 @@ spec:
   strategy:
     blueGreen:
       autoPromotionEnabled: false
-      activeService: skiapp-service
-      previewService: skiapp-service-preview
+      activeService: service-2048
+      previewService: 2048-service-preview
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: skiapp-service-preview
-  namespace: team-riker
+  name: 2048-service-preview
+  namespace: team-2048
 spec:
   ports:
     - port: 80
-      targetPort: 8080
+      targetPort: 80
       protocol: TCP
   type: NodePort
   selector:
-    app: skiapp
+    app: 2048
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: skiapp-ingress-preview
-  namespace: team-riker
+  name: 2048-ingress-preview
+  namespace: team-2048
   annotations:
-    alb.ingress.kubernetes.io/group.name: riker-preview
+    alb.ingress.kubernetes.io/group.name: 2048-preview
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
-    alb.ingress.kubernetes.io/tags: 'Environment=dev,Team=Riker'
+    alb.ingress.kubernetes.io/tags: 'Environment=dev,Team=2048'
 spec:
   ingressClassName: alb
   rules:
@@ -96,40 +92,6 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: skiapp-service-preview
+            name: 2048-service-preview
             port:
               number: 80
-
-spec:
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: app-2048
-  replicas: 5
-  template:
-    metadata:
-      labels:
-        app.kubernetes.io/name: app-2048
-    spec:
-      containers:
-      - image: public.ecr.aws/l6m2t8p7/docker-2048:latest
-        imagePullPolicy: Always
-        name: app-2048
-        ports:
-        - containerPort: 80
-      nodeSelector:
-        karpenter.sh/capacity-type: spot
-        kubernetes.io/arch: amd64
-      topologySpreadConstraints:
-      - maxSkew: 1
-        topologyKey: topology.kubernetes.io/zone
-        whenUnsatisfiable: DoNotSchedule
-      affinity:
-        podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchExpressions:
-              - key: app.kubernetes.io/name
-                operator: In
-                values:
-                - app-2048
-            topologyKey: kubernetes.io/hostname

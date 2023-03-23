@@ -18,7 +18,7 @@ metadata:
   {{ else }}
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
   {{ end }}
-    alb.ingress.kubernetes.io/tags: Environment={{ .Values.labels.env }},Team=Riker
+    alb.ingress.kubernetes.io/tags: Environment={{ .Values.labels.env }},Team=2048
 {{ end }}
   {{ if .Values.spec.ingress.host }}
     external-dns.alpha.kubernetes.io/set-identifier: {{ .Values.spec.clusterName }}
