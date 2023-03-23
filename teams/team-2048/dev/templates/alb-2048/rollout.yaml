@@ -3,8 +3,6 @@ kind: Rollout
 metadata:
   name: rollout-2048
   namespace: team-2048
-  labels:
-    app: ninja
 spec:
   replicas: 3
   revisionHistoryLimit: 1
